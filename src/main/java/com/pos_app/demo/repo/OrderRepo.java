@@ -14,11 +14,12 @@ import java.util.List;
 @Repository
 @EnableJpaRepositories
 public interface OrderRepo extends JpaRepository<Order, Integer> {
+    //query by status
     @Query(value = "SELECT\n" +
             "    c.customer_name AS CustomerName,\n" +
             "    c.customer_address AS CustomerAddress,\n" +
-            "    c.contact_number AS ContactNumber,\n" +
-            "    o.order_date,\n" +
+            "    c.contact_number AS ContactNumbers,\n" +
+            "    o.order_date AS date,\n" +
             "    o.total\n" +
             "FROM customer c\n" +
             "         INNER JOIN orders o ON c.customer_id = o.customer_id\n" +
@@ -26,10 +27,26 @@ public interface OrderRepo extends JpaRepository<Order, Integer> {
     List<OrderDetailsInterface> getOrderDetails(@Param("val")boolean val,
                                                 PageRequest of);
 
-
+    //count query for status
     @Query(value = "SELECT COUNT(*) AS TotalCount\n" +
             "FROM customer c\n" +
             "         INNER JOIN orders o ON c.customer_id = o.customer_id\n" +
             "WHERE o.active_state =:val", nativeQuery = true)
     long countOrderDetailsByState(@Param("val") boolean val);
+
+    //query for get all orders
+    @Query(value ="SELECT\n" +
+            "    c.customer_name AS CustomerName,\n" +
+            "    c.customer_address AS CustomerAddress,\n" +
+            "    c.contact_number AS ContactNumbers,\n" +
+            "    o.order_date AS date,\n" +
+            "    o.total\n" +
+            "FROM customer c\n" +
+            "         INNER JOIN orders o ON c.customer_id = o.customer_id", nativeQuery = true)
+    List<OrderDetailsInterface> getAllOrderDetails(PageRequest of);
+
+    @Query(value = "SELECT COUNT(*) AS TotalCount\n" +
+            "FROM customer c\n" +
+            "         INNER JOIN orders o ON c.customer_id = o.customer_id", nativeQuery = true)
+    long countALLOrderDetails();
 }

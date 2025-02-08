@@ -92,7 +92,7 @@ public class OrderServiceImpl implements OrderService {
 
             for (OrderDetailsInterface o : orderDetailsInterfaces) {
                 ResponseOrderDetailsDTO detailsDTO = new ResponseOrderDetailsDTO(
-                        o.getCustomerName(), o.getCustomerAddress(), o.getContactName(),
+                        o.getCustomerName(), o.getCustomerAddress(), o.getContactNumbers(),
                         o.getDate(), o.getTotal()
                 );
 
@@ -104,7 +104,25 @@ public class OrderServiceImpl implements OrderService {
                     dataCount
             );
 
+        } else if (state.equalsIgnoreCase("all")) {
+            List<OrderDetailsInterface> orderDetailsInterfaces = orderRepo.getAllOrderDetails(PageRequest.of(page, 2));
+            List<ResponseOrderDetailsDTO> responseOrderDetailsDTOS = new ArrayList<>();
+
+            for (OrderDetailsInterface o : orderDetailsInterfaces) {
+                ResponseOrderDetailsDTO detailsDTO = new ResponseOrderDetailsDTO(
+                        o.getCustomerName(), o.getCustomerAddress(), o.getContactNumbers(),
+                        o.getDate(), o.getTotal()
+                );
+
+                responseOrderDetailsDTOS.add(detailsDTO);
+            }
+            long dataCount = orderRepo.countALLOrderDetails();
+            return new PaginatedResponseOrderDetails(
+                    responseOrderDetailsDTOS,
+                    dataCount
+            );
         }
-        return null;
+        throw new EntryNotFoundException("Invalid User Input.....");
+
     }
 }

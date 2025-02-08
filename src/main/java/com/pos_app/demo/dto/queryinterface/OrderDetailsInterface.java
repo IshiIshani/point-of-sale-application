@@ -4,7 +4,7 @@ public interface OrderDetailsInterface {
 
     String getCustomerName();
     String getCustomerAddress();
-    String getContactName();
+    String getContactNumbers();
     Date getDate();
     double  getTotal();
 
